@@ -9,7 +9,7 @@ use warp::{Rejection, Reply};
 pub struct ArcSessionStore<T: SessionStore>(pub Arc<T>);
 
 #[async_trait]
-impl<T> SessionStore for ArcSessionStore<T>
+impl<T : std::fmt::Debug + Send + Sync + Clone + 'static> SessionStore for ArcSessionStore<T>
 where
     T: SessionStore,
 {
@@ -97,7 +97,7 @@ where
         if let Some(_) = self.cookie_options.cookie_value {
             res.headers_mut().append(
                 "Set-Cookie",
-                http::header::HeaderValue::from_str(&self.cookie_options.to_string()).unwrap(),
+                warp::http::header::HeaderValue::from_str(&self.cookie_options.to_string()).unwrap(),
             );
         }
 

@@ -6,7 +6,7 @@ use warp::{Filter, Rejection};
 /// name 'sid' from the request and uses the passed in session store
 /// to retrieve the session. It returns the session for use by the
 /// downstream session handler.
-pub fn with_session<T: SessionStore>(
+pub fn with_session<T: SessionStore + std::fmt::Debug + Send + Sync + Clone + 'static>(
     session_store: T,
     cookie_options: Option<CookieOptions>,
 ) -> impl Filter<Extract = (SessionWithStore<T>,), Error = Rejection> + Clone {
